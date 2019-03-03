@@ -1,1 +1,4 @@
-.pyc
+*.pyc
+_MACOSX/
+.DS_Store
+.idea
