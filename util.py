@@ -4,7 +4,7 @@ import pandas as pd
 #Get CSV file path for stock symbol
 def symbol_to_path(symbol, base_dir=None):
     if base_dir is None:
-        base_dir = os.environ.get("MARKET_DATA_DIR", '../data/')
+        base_dir = os.environ.get("MARKET_DATA_DIR", 'data/')
     return os.path.join(base_dir, "{}.csv".format(str(symbol)))
 
 
