@@ -1,3 +1,5 @@
+import os
+
 import requests                  # [handles the http interactions](http://docs.python-requests.org/en/master/)
 from bs4 import BeautifulSoup    # beautiful soup handles the html to text conversion and more
 import re                        # regular expressions are necessary for finding the crumb (more on crumbs later)
@@ -9,7 +11,7 @@ def _get_crumbs_and_cookies(stock):
     """
     get crumb and cookies for historical data csv download from yahoo finance
 
-    parameters: stock - short-handle identifier of the company 
+    parameters: stock - short-handle identifier of the company
 
     returns a tuple of header, crumb and cookie
     """
@@ -74,12 +76,11 @@ def load_csv_data(stock, interval='1d', day_begin='01-03-2018', day_end='22-03-2
 
 
 if __name__ == "__main__":
-    # stocks = ['IBM', 'GOOG']
-    stocks = ['AAPL']
+    stocks = ['IBM', 'GOOG', 'AAPL', 'SPY', 'MJ']
     cols = []
     for stock in stocks:
         csvData = load_csv_data(stock)
         csvData = [item.split(',') for item in csvData]
         cols = csvData[0]
         csvData = pd.DataFrame(csvData[1:], columns=cols)
-        csvData.to_csv("data/newStocks/GOOGerinoAccino.csv", index=True)
+        csvData.to_csv("../data/newStocks/" + stock + ".csv", index=False)
