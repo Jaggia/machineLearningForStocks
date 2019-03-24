@@ -5,7 +5,7 @@ import util
 import indicators
 import RTLearner
 import BagLearner
-import random
+
 
 def get_X_and_Y(prices, YSELL, YBUY, N, impact):
     df_X = indicators.get_features(prices)

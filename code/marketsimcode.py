@@ -1,7 +1,6 @@
 ### Created by Anadi Jaggia
 import pandas as pd
 import numpy as np
-import datetime as dt
 from util import get_data
 
 def get_trans_cost(commission, impact, symbol_price, curr_price, sign):
