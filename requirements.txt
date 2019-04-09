@@ -1,0 +1,11 @@
+requests==2.21.0
+beautifulsoup4==4.7.1
+fix_yahoo_finance==0.0.22
+matplotlib==3.0.3
+mpl_finance==0.10.0
+numpy==1.16.2
+pandas==0.24.2
+pandas_datareader==0.7.0
+scipy==1.2.1
+seaborn==0.9.0
+scikit_learn==0.20.3
