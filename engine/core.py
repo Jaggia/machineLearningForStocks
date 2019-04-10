@@ -1,4 +1,4 @@
-from core import util
+from code import util
 from code.StrategyLearner import StrategyLearner
 import numpy as np
 import datetime as dt
