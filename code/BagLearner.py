@@ -1,6 +1,6 @@
 ### Created by Anadi Jaggia
 import numpy as np
-import RTLearner as rt
+from code import RTLearner as rt
 from scipy import stats
 
 class BagLearner(object):

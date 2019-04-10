@@ -1,10 +1,10 @@
 ### Created by Anadi Jaggia
 import datetime as dt
 import pandas as pd
-import util
-import indicators
-import RTLearner
-import BagLearner
+from code import util
+from code import indicators
+from code import RTLearner
+from code import BagLearner
 
 
 def get_X_and_Y(prices, YSELL, YBUY, N, impact):
@@ -22,7 +22,8 @@ class StrategyLearner(object):
         self.impact = impact
 
     # this method should create a QLearner, and train it for trading
-    def addEvidence(self, symbol="IBM", sd=dt.datetime(2008, 1, 1), ed=dt.datetime(2009, 1, 1), sv=10000, impact=0):
+    # ALEX I removed default values to make the first 3 arguments required
+    def addEvidence(self, symbol, sd, ed, sv=10000, impact=0):
         # add your code to do learning here
 
         # N = 5  # Number of day returns to use
@@ -49,7 +50,7 @@ class StrategyLearner(object):
         self.learner.addEvidence(Xtrain, Ytrain)
 
     # this method should use the existing policy and test it against new data
-    def testPolicy(self, symbol="IBM", sd=dt.datetime(2009, 1, 1), ed=dt.datetime(2010, 1, 1), sv=10000):
+    def testPolicy(self, symbol, sd, ed, sv=10000):
         syms = [symbol]
         prices_all = util.get_data(syms, pd.date_range(sd, ed))
         prices = prices_all[syms]
@@ -68,4 +69,6 @@ class StrategyLearner(object):
             df_trades[symbol].iloc[i] = Y[i] * 1000.0 - pos
             pos += df_trades[symbol].iloc[i]
 
-        return df_trades
+        #print(Y)
+        return Y
+        #return df_trades
