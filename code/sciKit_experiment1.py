@@ -18,12 +18,12 @@ def plot_me(sl_port_vals, benchwarmer_port_vals):
 def main():
 
     # Parameters
-    sd_train = dt.datetime(2008,1,1)
-    ed_train = dt.datetime(2009, 12, 31)
-    sd_test = dt.datetime(2010, 1, 1)
-    ed_test = dt.datetime(2011, 12, 31)
-    sym = 'JPM'
-    capital = 100000
+    sd_train = dt.datetime(2018, 3, 1)
+    ed_train = dt.datetime(2019, 2, 28)
+    sd_test = dt.datetime(2019, 3, 1)
+    ed_test = dt.datetime(2019, 3, 22)
+    sym = 'XLF'
+    capital = 200
 
     # Time to train for the big match
     learner = sl.StrategyLearner(impact=0.0)

@@ -43,7 +43,7 @@ def get_data_from_interwebs(reload_sp500=False):
     for ticker in tickers:
         # just in case your connection breaks, we'd like to save our progress!
         if not os.path.exists('data/{}.csv'.format(ticker)):
-            print ticker
+            print(ticker)
             try:
                 df = getData_1.download_data([ticker], internal=False, start=start, end=end)
             except AssertionError:

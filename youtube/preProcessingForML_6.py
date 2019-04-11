@@ -70,7 +70,14 @@ def extract_featuresets(ticker, is_in_SPY500):
 def do_ml(ticker, is_in_SPY500):
     X, y, df = extract_featuresets(ticker, is_in_SPY500)
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
+    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
+    xDivider = int(len(X) * 0.75)
+    X_train = X[: xDivider]
+    X_test = X[xDivider: len(X)]
+
+    yDivider = int(len(y) * 0.75)
+    y_train = y[:yDivider]
+    y_test = y[yDivider: len(y)]
 
     clf = VotingClassifier([('lsvc', svm.LinearSVC()),
                             ('knn', neighbors.KNeighborsClassifier()),
@@ -88,6 +95,4 @@ def do_ml(ticker, is_in_SPY500):
 
 if __name__ == "__main__":
     # do_ml('AAPL', is_in_SPY500=True)
-    # do_ml('XLF', is_in_SPY500=False)
-    do_ml('TSLA', is_in_SPY500=False)
-    do_ml('AMZN', is_in_SPY500=True)
+    do_ml('T', is_in_SPY500=True)

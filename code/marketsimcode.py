@@ -15,7 +15,7 @@ def get_sd_and_ed(df_trades):
     return start_date, end_date
 
 
-def compute_portvals(df_trades, start_val=100000, commission=9.95, impact=0.05):
+def compute_portvals(df_trades, start_val=100000, commission=0, impact=0):
 
 
     syms = df_trades.columns.values.tolist()
@@ -23,12 +23,13 @@ def compute_portvals(df_trades, start_val=100000, commission=9.95, impact=0.05):
     
     #Reading in price data
     df_prices = get_data(syms, pd.date_range(start_date, end_date))
+    # df_prices = get_data(syms, pd.date_range(start_date, end_date))
     df_prices = df_prices.drop('SPY', 1)  # Remove SPY
     df_prices['Cash'] = np.ones(df_prices.shape[0])
 
 
     #Add cash column and transaction costs
-    df_trades['Cash'] = np.zeros(df_trades.shape[0])
+    df_trades['Cash'] = np.zeros(df_trades.shape[0], )
     for index, row in df_trades.iterrows():
         for symbol in syms:
             if row[symbol] > 0:

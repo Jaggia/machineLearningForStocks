@@ -76,7 +76,8 @@ def load_csv_data(stock, interval='1d', day_begin='01-03-2018', day_end='22-03-2
 
 
 if __name__ == "__main__":
-    stocks = ['IBM', 'GOOG', 'AAPL', 'SPY', 'MJ']
+    # stocks = ['IBM', 'GOOG', 'AAPL', 'SPY', 'MJ']
+    stocks = ['XLF']
     cols = []
     for stock in stocks:
         csvData = load_csv_data(stock)
