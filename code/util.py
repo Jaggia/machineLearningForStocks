@@ -9,8 +9,8 @@ def symbol_to_path(symbol, base_dir=None):
 
 
 #Read stock data for given symbols from CSV files
-def get_data(symbols, dates, addSPY=True, colname = 'Adj Close'):
-    df = pd.DataFrame(index=dates)
+def get_data(symbols, sd, ed, addSPY=False, colname = 'Adj Close'):
+    df = pd.DataFrame(index=pd.date_range(sd, ed))
     if addSPY and 'SPY' not in symbols:
         symbols = ['SPY'] + symbols
 
