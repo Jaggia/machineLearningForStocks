@@ -18,11 +18,11 @@ def plot_me(sl_port_vals, benchwarmer_port_vals):
 def main():
 
     # Parameters
-    sd_train = dt.datetime(2008,1,1)
-    ed_train = dt.datetime(2009, 12, 31)
-    sd_test = dt.datetime(2010, 1, 1)
-    ed_test = dt.datetime(2011, 12, 31)
-    sym = 'JPM'
+    sd_train = dt.datetime(2018,1,1)
+    ed_train = dt.datetime(2018, 11, 30)
+    sd_test = dt.datetime(2018, 12, 1)
+    ed_test = dt.datetime(2018, 12, 31)
+    sym = 'A'
     capital = 100000
 
     # Time to train for the big match

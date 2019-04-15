@@ -2,6 +2,7 @@ from code import util
 import numpy as np
 import datetime as dt
 import matplotlib.pyplot as plt
+import pandas as pd
 from engine.RandomForest import RFLearner
 
 from colorama import Fore, Style
@@ -34,7 +35,7 @@ class Simulation(object):
         self.stocks = {}
         for ticker in tickers:
             self.port[ticker] = 0
-            self.stocks[ticker] = util.get_data([ticker], sd_train, ed_test)
+            self.stocks[ticker] = util.get_data([ticker], pd.date_range(sd_train, ed_test))
 
     def startSim(self):
         for symbol in self.stocks.keys():

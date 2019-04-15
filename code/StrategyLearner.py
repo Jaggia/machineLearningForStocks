@@ -24,7 +24,7 @@ class StrategyLearner(object):
     # this method should create a QLearner, and train it for trading
     # ALEX I removed default values to make the first 3 arguments required
     def addEvidence(self, symbol, sd, ed, sv=10000, impact=0):
-        # add your code to do learning here
+        # add your classCode to do learning here
 
         # N = 5  # Number of day returns to use
         # YSELL = -0.01
