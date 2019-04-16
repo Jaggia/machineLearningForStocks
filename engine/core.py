@@ -1,4 +1,4 @@
-from code import util
+import code.util as util
 import numpy as np
 import datetime as dt
 import matplotlib.pyplot as plt
@@ -13,15 +13,17 @@ print(LOG_COLOR + 'using this color for logs')
 
 class Simulation(object):
     def __init__(self,
-                 sd_train=dt.datetime(2009, 1, 1),
-                 sd_test=dt.datetime(2010, 1, 1),
-                 ed_test=dt.datetime(2011, 1, 1),
+                 sd_train=dt.datetime(2018, 1, 1),
+                 ed_train=dt.datetime(2018, 12, 31),
+                 sd_test=dt.datetime(2019, 1, 1),
+                 ed_test=dt.datetime(2019, 3, 22),
                  currency=10000,
                  model=RFLearner(),
-                 tickers=('GOOG', 'MSFT',)):# 'AMZN', 'IBM', 'AAPL')):
+                 tickers=('A')):# 'MSFT', 'AMZN', 'IBM', 'AAPL')):
 
         self.sd_train = sd_train  # start day train
-        self.ed_train = sd_test - dt.timedelta(days=1)
+        # self.ed_train = sd_test - dt.timedelta(days=1)
+        self.ed_train = ed_train
         self.sd_test = sd_test  # start day test
         self.ed_test = ed_test  # end day
         self.cd = sd_test  # current day of trading simulation
@@ -57,7 +59,7 @@ class Simulation(object):
             if self.port[ticker] < 0:
                 raise ValueError('Sold more stocks than you had')
 
-            print(f'{ticker} val on {self.cd} is {stockVal}')
+            print('{} val on {} is {}'.format(ticker, self.cd, stockVal))
 
             numStock = self.port[ticker]
             portval += numStock * stockVal
