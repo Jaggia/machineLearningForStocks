@@ -1,4 +1,4 @@
-from code import util
+from src import util
 from engine.TradingModel import TradingModel
 import numpy as np
 import datetime as dt
@@ -40,7 +40,7 @@ class RFLearner(TradingModel):
         plt.plot(values)
         plt.show()
         print(values)
-        input()
+        # input()
 
     def trade(self, symbol, data, sd, ed, currency):
         pass
