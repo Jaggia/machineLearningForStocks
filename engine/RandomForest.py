@@ -1,12 +1,17 @@
+from src import util
+from engine.TradingModel import TradingModel
 import numpy as np
 import datetime as dt
 from sklearn.ensemble import RandomForestClassifier
 import matplotlib.pyplot as plt
 import pandas as pd
-
-from engine.TradingModel import TradingModel
-import engine.util as util
 from src import indicators
+from engine import janitor
+
+from colorama import Fore, Style
+LOG_COLOR = Style.BRIGHT + Fore.GREEN
+ERR_COLOR = Style.BRIGHT + Fore.RED
+print(LOG_COLOR + 'using this color for logs')
 
 # ySell and yBuy are the min % changes we are looking for
 # that will trigger a buy/sell
@@ -29,7 +34,7 @@ class RFLearner(TradingModel):
         self.window = window
         self.learners[symbol] = RandomForestClassifier(n_estimators=100, max_depth=3)
 
-        prices = data[sd:ed]
+        prices = data[sd:ed].values
         # prices = prices.reshape((prices.shape[0],))
         #print(prices)
         print(type(prices))
@@ -41,13 +46,14 @@ class RFLearner(TradingModel):
         print('numdays', numdays)
         # window = 100
         if numdays < window:
-            raise ValueError(util.ERR_COLOR + 'Need more days to train Random Forest '
+            raise ValueError('Need more days to train Random Forest '
                              'classifier with window ' + str(window))
 
         # Calculate indicators and features
-        prices = util.backfill(prices)
-        df_X, df_Y = get_X_and_Y(prices, -0.01, 0.01, 7)
-        print(df_X, df_Y)
+        df_X, df_Y = get_X_and_Y(data, -0.01, 0.01, 7)
+
+        df_X = janitor.backfill(df_X)
+        df_Y = janitor.backfill(df_Y)
 
         Xtrain = df_X.values
         Ytrain = df_Y.values

@@ -1,10 +1,16 @@
-import engine.util as util
+import src.util as util
 import numpy as np
 import datetime as dt
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from engine import janitor
 from engine.RandomForest import RFLearner
+
+from colorama import Fore, Style
+LOG_COLOR = Style.BRIGHT + Fore.GREEN
+ERR_COLOR = Style.BRIGHT + Fore.RED
+print(LOG_COLOR + 'using this color for logs')
 
 
 class Simulation(object):
@@ -37,7 +43,7 @@ class Simulation(object):
 
     def startSim(self):
         for symbol in self.tickers:
-            self.stocks[symbol] = util.backfill(self.stocks[symbol])
+            self.stocks[symbol] = janitor.backfill(self.stocks[symbol])
 
             self.model.addEvidence(symbol, self.stocks[symbol], self.sd_train, self.ed_train)
 
@@ -65,7 +71,7 @@ class Simulation(object):
             self.port[ticker] += numTrades
             self.currency -= numTrades * stockVal
             if self.port[ticker] < 0:
-                raise ValueError(util.ERR_COLOR + 'Sold more stocks than you had')
+                raise ValueError('Sold more stocks than you had')
 
             print('{} val on {} is {}'.format(ticker, self.cd, stockVal))
 
