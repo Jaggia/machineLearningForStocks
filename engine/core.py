@@ -3,6 +3,8 @@ import numpy as np
 import datetime as dt
 import matplotlib.pyplot as plt
 import pandas as pd
+
+from engine import janitor
 from engine.RandomForest import RFLearner
 
 from colorama import Fore, Style
@@ -13,13 +15,13 @@ print(LOG_COLOR + 'using this color for logs')
 
 class Simulation(object):
     def __init__(self,
-                 sd_train=dt.datetime(2014, 1, 1),
-                 ed_train=dt.datetime(2015, 12, 31),
-                 sd_test=dt.datetime(2016, 1, 1),
-                 ed_test=dt.datetime(2018, 1, 1),
-                 currency=100000,
+                 sd_train=dt.datetime(2018, 1, 1),
+                 ed_train=dt.datetime(2018, 12, 31),
+                 sd_test=dt.datetime(2019, 1, 1),
+                 ed_test=dt.datetime(2019, 3, 22),
+                 currency=1000000,
                  model=RFLearner(),
-                 tickers=('GOOG',)):  # 'MSFT', 'AMZN', 'IBM', 'AAPL')):
+                 tickers= "A"):  # 'MSFT', 'AMZN', 'IBM', 'AAPL')):
 
         self.sd_train = sd_train  # start day train
         # self.ed_train = sd_test - dt.timedelta(days=1)
@@ -41,6 +43,8 @@ class Simulation(object):
 
     def startSim(self):
         for symbol in self.tickers:
+            self.stocks[symbol] = janitor.backfill(self.stocks[symbol])
+
             self.model.addEvidence(symbol, self.stocks[symbol], self.sd_train, self.ed_train)
 
     def tradeToday(self, trade=True, retrain=False):

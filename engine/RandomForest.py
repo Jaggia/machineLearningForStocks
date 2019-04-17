@@ -4,12 +4,24 @@ import numpy as np
 import datetime as dt
 from sklearn.ensemble import RandomForestClassifier
 import matplotlib.pyplot as plt
+import pandas as pd
+from src import indicators
+from engine import janitor
 
 from colorama import Fore, Style
 LOG_COLOR = Style.BRIGHT + Fore.GREEN
 ERR_COLOR = Style.BRIGHT + Fore.RED
 print(LOG_COLOR + 'using this color for logs')
 
+# ySell and yBuy are the min % changes we are looking for
+# that will trigger a buy/sell
+def get_X_and_Y(prices, YSELL, YBUY, window):
+    df_X = indicators.get_features(prices)
+    df_returns = (prices.shift(-window) / prices) - 1.0
+    df_Y = indicators.get_Y(df_returns,
+                            YSELL,
+                            YBUY)
+    return df_X, df_Y
 
 class RFLearner(TradingModel):
     def __init__(self):
@@ -21,29 +33,12 @@ class RFLearner(TradingModel):
         window = 100
         self.window = window
         self.learners[symbol] = RandomForestClassifier(n_estimators=100, max_depth=3)
-        values = np.array(data[sd:ed].values)
-        values = values.reshape((values.shape[0],))
-        #print(values)
-        #plt.plot(values)
-        #plt.show()
 
-        # replace nans with closest actual price# find closest val
-        closestVal = -1
-        # find first closestVal
-        for n in range(values.shape[0]):
-            if str(values[n]) != 'nan':
-                closestVal = values[n]
-                break
-
-        for n in range(values.shape[0]):
-            if str(values[n]) == 'nan':
-                values[n] = closestVal
-            else:
-                closestVal = values[n]
-
-        #print(values)
-        #print(type(values))
-        #plt.plot(values)
+        prices = data[sd:ed].values
+        # prices = prices.reshape((prices.shape[0],))
+        #print(prices)
+        print(type(prices))
+        #plt.plot(prices)
         #plt.show()
         #input()
 
@@ -54,15 +49,21 @@ class RFLearner(TradingModel):
             raise ValueError('Need more days to train Random Forest '
                              'classifier with window ' + str(window))
 
-        trainSamples = []
-        labels = []
-        for n in range(numdays - window - 1):
-            trainVals = values[n : n+window]
-            trainSamples.append(trainVals)
-            label = 1 if values[n+window+1] > values[n+window] else 0
-            labels.append(label)
+        # Calculate indicators and features
+        df_X, df_Y = get_X_and_Y(data, -0.01, 0.01, 7)
 
-        self.learners[symbol].fit(trainSamples, labels)
+        df_X = janitor.backfill(df_X)
+        df_Y = janitor.backfill(df_Y)
+
+        Xtrain = df_X.values
+        Ytrain = df_Y.values
+        Ytrain = Ytrain.reshape((Ytrain.shape[0],))
+        print(Xtrain.shape)
+        print(Ytrain.shape)
+
+        self.learners[symbol].fit(Xtrain, Ytrain)
+
+        # self.learners[symbol].fit(trainSamples, labels)
 
 
     def trade(self, symbol, data, cd, currency, port):
