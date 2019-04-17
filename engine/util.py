@@ -1,6 +1,21 @@
 import os
 import pandas as pd
 
+from colorama import Fore, Style
+LOG_COLOR = Style.BRIGHT + Fore.GREEN
+ERR_COLOR = Style.BRIGHT + Fore.RED
+print(LOG_COLOR + 'using this color for logs')
+
+# replace nans with closest non-nan value
+def backfill(data):
+    data = data.fillna(method='backfill')
+    return data
+
+# replace nans with zero
+def cleanWithZeros(data):
+    data = data.fillna(0)
+    return data
+
 #Get CSV file path for stock symbol
 def symbol_to_path(symbol, base_dir=None):
     if base_dir is None:
