@@ -62,8 +62,34 @@ class RFLearner(TradingModel):
         print(Ytrain.shape)
 
         self.learners[symbol].fit(Xtrain, Ytrain)
-
+        print("Feature Importances : ")
+        print(self.learners[symbol].feature_importances_)
         # self.learners[symbol].fit(trainSamples, labels)
+
+    def testAndBuildTradingDecisions(self, symbol, data, sd, ed, visualize=False):
+        prices = data[sd:ed].values
+        print(type(prices))
+
+        df_X = indicators.get_features(data)
+        df_X = janitor.backfill(df_X)
+
+        Xtest = df_X.values
+
+        Y = self.learners[symbol].predict(Xtest)
+
+        if visualize:
+            visualize()
+
+        return Y
+
+    def visualize(self):
+        # how to score? or not necessarily a need for scoring?
+        # maybe just a need to measure its performance
+        # calculate accuracy measures like alpha, beta etc.
+        pass
+        # add benchmark which is sp500. just plot its prices
+        # so we can compare our performance to the market
+
 
 
     def trade(self, symbol, data, cd, currency, port):
