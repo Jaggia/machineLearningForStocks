@@ -1,16 +1,10 @@
-import src.util as util
+import engine.util as util
 import numpy as np
 import datetime as dt
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from engine import janitor
 from engine.RandomForest import RFLearner
-
-from colorama import Fore, Style
-LOG_COLOR = Style.BRIGHT + Fore.GREEN
-ERR_COLOR = Style.BRIGHT + Fore.RED
-print(LOG_COLOR + 'using this color for logs')
 
 
 class Simulation(object):
@@ -43,9 +37,9 @@ class Simulation(object):
 
     def startSim(self):
         for symbol in self.tickers:
-            self.stocks[symbol] = janitor.backfill(self.stocks[symbol])
-
+            self.stocks[symbol] = util.backfill(self.stocks[symbol])
             self.model.addEvidence(symbol, self.stocks[symbol], self.sd_train, self.ed_train)
+
 
     def tradeToday(self, trade=True, retrain=False):
         if not trade:
@@ -58,9 +52,12 @@ class Simulation(object):
 
         trades = {}
         for ticker in self.tickers:
-            trades[ticker] = self.model.trade(ticker, self.stocks[ticker],
-                                              self.cd,
-                                              self.currency, self.port[ticker])
+            trades[ticker] = self.model.testAndBuildTradingDecisions(ticker, self.stocks[ticker],
+                                                                     self.sd_train, self.ed_train,
+                                                                     visualize=True)
+        # trades[ticker] = self.model.trade(ticker, self.stocks[ticker],
+        #                                   self.cd,
+        #                                   self.currency, self.port[ticker])
 
         portval = 0
         for ticker, numTrades in trades.items():
@@ -71,7 +68,7 @@ class Simulation(object):
             self.port[ticker] += numTrades
             self.currency -= numTrades * stockVal
             if self.port[ticker] < 0:
-                raise ValueError('Sold more stocks than you had')
+                raise ValueError(util.ERR_COLOR + 'Sold more stocks than you had')
 
             print('{} val on {} is {}'.format(ticker, self.cd, stockVal))
 
