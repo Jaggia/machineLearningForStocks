@@ -38,8 +38,8 @@ class Simulation(object):
     def startSim(self):
         for symbol in self.tickers:
             self.stocks[symbol] = util.backfill(self.stocks[symbol])
-
             self.model.addEvidence(symbol, self.stocks[symbol], self.sd_train, self.ed_train)
+
 
     def tradeToday(self, trade=True, retrain=False):
         if not trade:
@@ -52,9 +52,12 @@ class Simulation(object):
 
         trades = {}
         for ticker in self.tickers:
-            trades[ticker] = self.model.trade(ticker, self.stocks[ticker],
-                                              self.cd,
-                                              self.currency, self.port[ticker])
+            trades[ticker] = self.model.testAndBuildTradingDecisions(ticker, self.stocks[ticker],
+                                                                     self.sd_train, self.ed_train,
+                                                                     visualize=True)
+        # trades[ticker] = self.model.trade(ticker, self.stocks[ticker],
+        #                                   self.cd,
+        #                                   self.currency, self.port[ticker])
 
         portval = 0
         for ticker, numTrades in trades.items():
