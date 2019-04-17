@@ -4,6 +4,7 @@ from sklearn.ensemble import RandomForestClassifier
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from engine import janitor
 from engine.TradingModel import TradingModel
 import engine.util as util
 from src import indicators
@@ -45,9 +46,11 @@ class RFLearner(TradingModel):
                              'classifier with window ' + str(window))
 
         # Calculate indicators and features
-        prices = util.backfill(prices)
+        prices = janitor.backfill(prices)
         df_X, df_Y = get_X_and_Y(prices, -0.01, 0.01, 7)
-        print(df_X, df_Y)
+
+        df_X = janitor.backfill(df_X)
+        df_Y = janitor.backfill(df_Y)
 
         Xtrain = df_X.values
         Ytrain = df_Y.values
@@ -55,7 +58,7 @@ class RFLearner(TradingModel):
         print(Xtrain.shape)
         print(Ytrain.shape)
 
-        self.learners[symbol].fit(Xtrain, Ytrain)
+        self.learners[symbol].fit(df_X, df_Y)
         print("Feature Importances : ")
         print(self.learners[symbol].feature_importances_)
         # self.learners[symbol].fit(trainSamples, labels)
@@ -65,18 +68,18 @@ class RFLearner(TradingModel):
         print(type(prices))
 
         df_X = indicators.get_features(data)
-        df_X = util.backfill(df_X)
+        df_X = janitor.backfill(df_X)
 
         Xtest = df_X.values
 
         Y = self.learners[symbol].predict(Xtest)
 
         if visualize:
-            visualize()
+            self.visualizeVals()
 
         return Y
 
-    def visualize(self):
+    def visualizeVals(self):
         # how to score? or not necessarily a need for scoring?
         # maybe just a need to measure its performance
         # calculate accuracy measures like alpha, beta etc.

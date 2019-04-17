@@ -75,7 +75,6 @@ def get_features(df_prices):
          df_momentum
          ], axis=1)
 
-    input('HERE IS THE ISSUE, features is empty in src/indicators/get_features')
     return features
 
 

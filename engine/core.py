@@ -4,6 +4,7 @@ import datetime as dt
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from engine import janitor
 from engine.RandomForest import RFLearner
 
 
@@ -37,7 +38,7 @@ class Simulation(object):
 
     def startSim(self):
         for symbol in self.tickers:
-            self.stocks[symbol] = util.backfill(self.stocks[symbol])
+            self.stocks[symbol] = janitor.backfill(self.stocks[symbol])
             self.model.addEvidence(symbol, self.stocks[symbol], self.sd_train, self.ed_train)
 
 
