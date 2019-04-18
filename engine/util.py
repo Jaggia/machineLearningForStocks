@@ -14,18 +14,16 @@ def symbol_to_path(symbol, base_dir=None):
 
 
 #Read stock data for given symbols from CSV files
-def get_data(symbols, date_range, addSPY=False, colname = 'Adj Close'):
+def get_data(symbols, date_range, colname = 'Adj Close'):
     df = pd.DataFrame(index=date_range)
-    if addSPY and 'SPY' not in symbols:
-        symbols = ['SPY'] + symbols
 
     for symbol in symbols:
         df_temp = pd.read_csv('../data/{}.csv'.format(symbol), index_col='Date',
                 parse_dates=True, usecols=['Date', colname], na_values=['nan'])
         df_temp = df_temp.rename(columns={colname: symbol})
         df = df.join(df_temp)
-        if symbol == 'SPY':
-            df = df.dropna(subset=["SPY"])
+        # if symbol == 'SPY':
+        #     df = df.dropna(subset=["SPY"])
 
     return df
 

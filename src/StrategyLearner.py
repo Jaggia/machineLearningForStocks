@@ -1,10 +1,12 @@
 ### Created by Anadi Jaggia
 import datetime as dt
 import pandas as pd
-from code import util
-from code import indicators
-from code import RTLearner
-from code import BagLearner
+from engine import util
+from engine import RandomForest
+from src import indicators
+from src import RTLearner
+from src import BagLearner
+from engine import janitor
 
 
 def get_X_and_Y(prices, YSELL, YBUY, N, impact):
@@ -37,17 +39,23 @@ class StrategyLearner(object):
         prices_all = util.get_data(syms, pd.date_range(sd, ed))
         prices = prices_all[syms]
 
+        prices = janitor.backfill(prices)
         # Calculate indicators and features
         df_X, df_Y = get_X_and_Y(prices, -0.01, 0.01, 7, self.impact)
+
+        df_X = janitor.cleanWithZeros(df_X)
+        df_Y = janitor.cleanWithZeros(df_Y)
 
         Xtrain = df_X.values
         Ytrain = df_Y.values
 
-        self.learner = BagLearner.BagLearner(learner=RTLearner.RTLearner,
-                                             kwargs={'leaf_size': leaf_size},
-                                             bags=n_bags,
-                                             boost=False)
-        self.learner.addEvidence(Xtrain, Ytrain)
+        # self.learner = BagLearner.BagLearner(learner=RTLearner.RTLearner,
+        #                                      kwargs={'leaf_size': leaf_size},
+        #                                      bags=n_bags,
+        #                                      boost=False)
+        self.learner = RTLearner.RTLearner(leaf_size=leaf_size)
+        # self.learner = RandomForest.RFLearner() # Didn't wanna change this b4 you see this
+        self.learner.addEvidence(Xtrain=Xtrain, Ytrain=Ytrain)
 
     # this method should use the existing policy and test it against new data
     def testPolicy(self, symbol, sd, ed, sv=10000):
@@ -56,18 +64,13 @@ class StrategyLearner(object):
         prices = prices_all[syms]
 
         df_X = indicators.get_features(prices)
+
+        df_X = janitor.cleanWithZeros(df_X)
+
         Xtest = df_X.values
 
-        Y = self.learner.query(Xtest)
 
-        pos = 0.0
-        df_trades = pd.DataFrame(pos,
-                                 index=prices.index,
-                                 columns=[symbol])
-
-        for i in range(df_trades.shape[0]):
-            df_trades[symbol].iloc[i] = Y[i] * 1000.0 - pos
-            pos += df_trades[symbol].iloc[i]
+        Y = self.learner.query(Xtest, symbol, prices.index)
 
         #print(Y)
         return Y

@@ -1,7 +1,7 @@
 ### Created by Anadi Jaggia
 import pandas as pd
 import numpy as np
-from util import get_data
+from engine import util
 
 def get_trans_cost(commission, impact, symbol_price, curr_price, sign):
     if sign == 1:
@@ -22,9 +22,7 @@ def compute_portvals(df_trades, start_val=100000, commission=0, impact=0):
     start_date, end_date = get_sd_and_ed(df_trades)
     
     #Reading in price data
-    df_prices = get_data(syms, pd.date_range(start_date, end_date))
-    # df_prices = get_data(syms, pd.date_range(start_date, end_date))
-    df_prices = df_prices.drop('SPY', 1)  # Remove SPY
+    df_prices = util.get_data(syms, pd.date_range(start_date, end_date))
     df_prices['Cash'] = np.ones(df_prices.shape[0])
 
 
@@ -32,13 +30,13 @@ def compute_portvals(df_trades, start_val=100000, commission=0, impact=0):
     df_trades['Cash'] = np.zeros(df_trades.shape[0], )
     for index, row in df_trades.iterrows():
         for symbol in syms:
-            if row[symbol] > 0:
-                transaction_costs = get_trans_cost(commission, impact, row[symbol], df_prices.loc[index][symbol], 1)
-            elif row[symbol] < 0:
-                transaction_costs = get_trans_cost(commission, impact, row[symbol], df_prices.loc[index][symbol], -1)
-            else:
-                transaction_costs = 0.0
-
+            transaction_costs = 0
+            # if row[symbol] > 0:
+            #     transaction_costs = get_trans_cost(commission, impact, row[symbol], df_prices.loc[index][symbol], 1)
+            # elif row[symbol] < 0:
+            #     transaction_costs = get_trans_cost(commission, impact, row[symbol], df_prices.loc[index][symbol], -1)
+            # else:
+            #     transaction_costs = 0.0
             row['Cash'] += -1*row[symbol]*df_prices.loc[index][symbol] - transaction_costs
                 
         

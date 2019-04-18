@@ -1,8 +1,8 @@
 ### Created by Anadi Jaggia
 import pandas as pd
 import datetime as dt
-import StrategyLearner as sl
-import marketsimcode as msc
+from src import StrategyLearner as sl
+from src import marketsimcode as msc
 import matplotlib.pyplot as plt
 import math
 
@@ -18,15 +18,15 @@ def plot_me(sl_port_vals, benchwarmer_port_vals):
 def main():
 
     # Parameters
-    sd_train = dt.datetime(2018, 3, 1)
-    ed_train = dt.datetime(2019, 2, 28)
-    sd_test = dt.datetime(2019, 3, 1)
-    ed_test = dt.datetime(2019, 3, 22)
-    sym = 'XLF'
-    capital = 200
+    sd_train = dt.datetime(2018,1,1)
+    ed_train = dt.datetime(2018, 11, 30)
+    sd_test = dt.datetime(2018, 12, 1)
+    ed_test = dt.datetime(2018, 12, 31)
+    sym = 'A'
+    capital = 100000
 
     # Time to train for the big match
-    learner = sl.StrategyLearner(impact=0.0)
+    learner = sl.StrategyLearner()
     learner.addEvidence(symbol=sym, sd=sd_train,
                         ed=ed_train, sv=capital)
 

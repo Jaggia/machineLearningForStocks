@@ -58,25 +58,34 @@ class RFLearner(TradingModel):
         print(Xtrain.shape)
         print(Ytrain.shape)
 
-        self.learners[symbol].fit(df_X, df_Y)
+        self.learners[symbol].fit(Xtrain, Ytrain)
         print("Feature Importances : ")
         print(self.learners[symbol].feature_importances_)
         # self.learners[symbol].fit(trainSamples, labels)
 
     def testAndBuildTradingDecisions(self, symbol, data, sd, ed, visualize=False):
-        prices = data[sd:ed].values
-        print(type(prices))
+        syms = [symbol]
+        prices_all = util.get_data(syms, pd.date_range(sd, ed))
+        prices = prices_all[syms]
 
-        df_X = indicators.get_features(data)
-        df_X = janitor.backfill(df_X)
-
+        df_X = indicators.get_features(prices)
         Xtest = df_X.values
 
         Y = self.learners[symbol].predict(Xtest)
 
-        if visualize:
-            self.visualizeVals()
+        pos = 0.0
+        df_trades = pd.DataFrame(pos,
+                                 index=prices.index,
+                                 columns=[symbol])
 
+        for i in range(df_trades.shape[0]):
+            df_trades[symbol].iloc[i] = Y[i] * 1000.0 - pos
+            pos += df_trades[symbol].iloc[i]
+
+        #print(Y)
+        if visualize:
+            pass
+            self.visualizeVals()
         return Y
 
     def visualizeVals(self):
@@ -88,6 +97,8 @@ class RFLearner(TradingModel):
         # so we can compare our performance to the market
 
 
+    def buyBasedOnPredictions(self, predicatedTrades, currPortfolio):
+        print(type(predicatedTrades))
 
     def trade(self, symbol, data, cd, currency, port):
         # if port > 0:

@@ -56,9 +56,12 @@ class Simulation(object):
             trades[ticker] = self.model.testAndBuildTradingDecisions(ticker, self.stocks[ticker],
                                                                      self.sd_train, self.ed_train,
                                                                      visualize=True)
-        # trades[ticker] = self.model.trade(ticker, self.stocks[ticker],
-        #                                   self.cd,
-        #                                   self.currency, self.port[ticker])
+
+        for ticker in self.tickers:
+            self.port[ticker] = self.model.buyBasedOnPredictions(trades[ticker], self.port[ticker])
+            # trades[ticker] = self.model.trade(ticker, self.stocks[ticker],
+            #                                   self.cd,
+            #                                   self.currency, self.port[ticker])
 
         portval = 0
         for ticker, numTrades in trades.items():
@@ -68,8 +71,8 @@ class Simulation(object):
 
             self.port[ticker] += numTrades
             self.currency -= numTrades * stockVal
-            if self.port[ticker] < 0:
-                raise ValueError(util.ERR_COLOR + 'Sold more stocks than you had')
+            # if self.port[ticker] < 0:
+            #     raise ValueError(util.ERR_COLOR + 'Sold more stocks than you had')
 
             print('{} val on {} is {}'.format(ticker, self.cd, stockVal))
 
@@ -92,17 +95,17 @@ if __name__ == '__main__':
     for i in range(365):
         sim.tradeToday(retrain=False)
         sim.nextDay()
-        print('Current Day:', sim.cd)
-        print('Portfolio:', sim.port)
-        print('Currency:', sim.currency)
-        try:
+        # print('Current Day:', sim.cd)
+        # print('Portfolio:', sim.port)
+        # print('Currency:', sim.currency)
+        # try:
             # fails if no portfolio yet (market closed at start of sim)
-            print('Value: ', sim.portvals[-1])
-        except:
-            pass
-        print()
+            # print('Value: ', sim.portvals[-1])
+        # except:
+        #     pass
+        # print()
 
-    print(sim.portvals)
+    # print(sim.portvals)
     f, ax = plt.subplots(1)
     #ax.plot(sim.portdates, sim.portvals)
     ax.plot(sim.portvals)

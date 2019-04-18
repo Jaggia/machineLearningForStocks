@@ -1,11 +1,11 @@
 ### Created by Anadi Jaggia
 import numpy as np
-from code import RTLearner as rt
+from engine import RandomForest as rt
 from scipy import stats
 
 class BagLearner(object):
 
-    def __init__(self, learner = rt.RTLearner,
+    def __init__(self, learner = rt.RFLearner,
                  kwargs = {},
                  boost=False, bags = 20):
 
