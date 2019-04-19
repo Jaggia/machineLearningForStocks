@@ -56,15 +56,16 @@ class Simulation(object):
             trades[ticker] = self.model.testAndBuildTradingDecisions(ticker, self.stocks[ticker],
                                                                      self.sd_train, self.cd,
                                                                      visualize=True)
-            print('TRADES' + str(trades[ticker]))
+            # print('TRADES' + str(trades[ticker]))
 
         portval = 0
         for ticker, numTrades in trades.items():
+            numTrades = numTrades[-1]
             stockVal = self.stocks[ticker][self.cd:self.cd][ticker].values[0]
             if str(stockVal) == 'nan':
                 return 0
 
-            self.port[ticker] += numTrades[-1]
+            self.port[ticker] += numTrades
             self.currency -= numTrades * stockVal
             # if self.port[ticker] < 0:
             #     raise ValueError(util.ERR_COLOR + 'Sold more stocks than you had')
