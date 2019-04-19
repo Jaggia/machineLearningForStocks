@@ -56,7 +56,7 @@ class Simulation(object):
             trades[ticker] = self.model.testAndBuildTradingDecisions(ticker, self.stocks[ticker],
                                                                      self.sd_train, self.cd,
                                                                      visualize=True)
-            print(util.ERR_COLOR + 'TRADES' + str(trades[ticker]) + util.LOG_COLOR)
+            print('TRADES' + str(trades[ticker]))
 
         portval = 0
         for ticker, numTrades in trades.items():
