@@ -67,8 +67,10 @@ class RFLearner(TradingModel):
         syms = [symbol]
         prices_all = util.get_data(syms, pd.date_range(sd, ed))
         prices = prices_all[syms]
+        prices = janitor.backfill(prices)
 
         df_X = indicators.get_features(prices)
+        df_X = janitor.backfill(df_X)
         Xtest = df_X.values
 
         Y = self.learners[symbol].predict(Xtest)
