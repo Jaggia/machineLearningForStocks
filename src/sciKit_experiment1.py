@@ -10,7 +10,6 @@ from src import StrategyLearner as sl
 from matplotlib import style
 from src import marketsimcode as msc
 import matplotlib.pyplot as plt
-import math
 style.use('ggplot')
 
 def plot_me(sl_port_vals, benchwarmer_port_vals):
@@ -45,9 +44,10 @@ def main():
     sl_port_vals = msc.compute_portvals(sl_trades, start_val=capital,
                                         commission=0.0, impact=0.0)
 
+    benchmark_stock = ['SPY']
     # Benchmark of buying a 1000 and HODLing
-    benchwarmer_trades = pd.DataFrame(0.0, index=sl_trades.index, columns=[sym])
-    benchwarmer_trades[sym].iloc[0] = 1000.0
+    benchwarmer_trades = pd.DataFrame(0.0, index=sl_trades.index, columns=[benchmark_stock])
+    benchwarmer_trades[benchmark_stock].iloc[0] = 1000.0
     benchwarmer_port_vals = msc.compute_portvals(benchwarmer_trades, start_val=capital,
                                             commission=0.0, impact=0.0)
 
