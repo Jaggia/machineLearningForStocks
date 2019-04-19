@@ -18,10 +18,10 @@ def plot_me(sl_port_vals, benchwarmer_port_vals):
 def main():
 
     # Parameters
-    sd_train = dt.datetime(2018,1,1)
-    ed_train = dt.datetime(2018, 11, 30)
-    sd_test = dt.datetime(2018, 12, 1)
-    ed_test = dt.datetime(2018, 12, 31)
+    sd_train = dt.datetime(2014, 1, 1)
+    ed_train = dt.datetime(2017, 12, 31)
+    sd_test = dt.datetime(2018, 1, 1)
+    ed_test = dt.datetime(2018, 3, 31)
     sym = 'A'
     capital = 100000
 
@@ -49,7 +49,7 @@ def main():
     df_plotting = plot_me(sl_port_vals, benchwarmer_port_vals)
     # ax = df_plotting.plot(title='Comparing Strategies - In of Sample Period', fontsize=12)
     # ax = df_plotting.plot(title='Comparing Strategies - Out of Sample Period', fontsize=12)
-    ax = df_plotting.plot(title='', fontsize=12)
+    ax = df_plotting.plot(title='benchwarmer and port', fontsize=12)
     ax.set_xlabel('Date')
     ax.set_ylabel('Value')
     plt.show()

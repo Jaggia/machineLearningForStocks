@@ -17,6 +17,16 @@ def get_X_and_Y(prices, YSELL, YBUY, N, impact):
                             YBUY + impact)
     return df_X, df_Y
 
+
+def get_X_and_Y_test(prices, YSELL, YBUY, N, impact):
+    df_X = indicators.get_features(prices)
+    df_returns = (prices.shift(-N) / prices) - 1.0
+    df_Y = indicators.get_Y(df_returns,
+                            YSELL - impact,
+                            YBUY + impact)
+    return df_X, df_Y
+
+
 class StrategyLearner(object):
     # constructor
     def __init__(self, verbose=False, impact=0.0):
@@ -41,7 +51,7 @@ class StrategyLearner(object):
 
         prices = janitor.backfill(prices)
         # Calculate indicators and features
-        df_X, df_Y = get_X_and_Y(prices, -0.01, 0.01, 7, self.impact)
+        df_X, df_Y = get_X_and_Y(prices, -0.001, 0.001, 7, self.impact)
 
         df_X = janitor.cleanWithZeros(df_X)
         df_Y = janitor.cleanWithZeros(df_Y)
@@ -56,22 +66,52 @@ class StrategyLearner(object):
         self.learner = RTLearner.RTLearner(leaf_size=leaf_size)
         # self.learner = RandomForest.RFLearner() # Didn't wanna change this b4 you see this
         self.learner.addEvidence(Xtrain=Xtrain, Ytrain=Ytrain)
+        self.sd = sd
 
     # this method should use the existing policy and test it against new data
     def testPolicy(self, symbol, sd, ed, sv=10000):
+        # cd = sd
+        # Y = None
+        # while cd < ed:
+        #     print('Trading for day ', cd)
+        #
+        #     syms = [symbol]
+        #     prices_all = util.get_data(syms, pd.date_range(self.sd, cd))
+        #     prices = prices_all[syms]
+        #
+        #     prices = janitor.backfill(prices)
+        #     # Calculate indicators and features
+        #     df_X, df_Y = get_X_and_Y_test(prices, -0.01, 0.01, 7, self.impact)
+        #
+        #     df_X = janitor.backfill(df_X)
+        #
+        #     Xtest = df_X.values
+        #
+        #
+        #     #Y = self.learner.query(Xtest, symbol, prices.index)
+        #     trades = self.learner.query(Xtest, symbol, prices.index)
+        #     if Y is None:
+        #         Y = trades[trades.index == cd]
+        #     else:
+        #         Y = pd.concat([Y, trades[trades.index == cd]])
+        #
+        #     cd += dt.timedelta(days=1)
+
         syms = [symbol]
-        prices_all = util.get_data(syms, pd.date_range(sd, ed))
+        prices_all = util.get_data(syms, pd.date_range(self.sd, ed))
         prices = prices_all[syms]
 
-        df_X = indicators.get_features(prices)
+        prices = janitor.backfill(prices)
+        # Calculate indicators and features
+        df_X, df_Y = get_X_and_Y_test(prices, -0.01, 0.01, 7, self.impact)
 
-        df_X = janitor.cleanWithZeros(df_X)
+        df_X = janitor.backfill(df_X)
 
         Xtest = df_X.values
 
 
+        #Y = self.learner.query(Xtest, symbol, prices.index)
         Y = self.learner.query(Xtest, symbol, prices.index)
 
-        #print(Y)
         return Y
         #return df_trades

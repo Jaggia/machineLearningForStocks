@@ -4,6 +4,10 @@ def backfill(data):
     data = data.fillna(method='ffill')
     return data
 
+def forefill(data):
+    data = data.fillna(method='ffill')
+    return data
+
 # replace nans with zero
 def cleanWithZeros(data):
     data = data.fillna(0)
