@@ -112,6 +112,7 @@ class StrategyLearner(object):
 
         #Y = self.learner.query(Xtest, symbol, prices.index)
         Y = self.learner.query(Xtest, symbol, prices.index)
+        Y = Y[Y.index > sd]
 
         return Y
         #return df_trades
