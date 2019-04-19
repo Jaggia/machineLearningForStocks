@@ -1,10 +1,17 @@
 ### Created by Anadi Jaggia
+from sys import platform as sys_pf
+if sys_pf == 'darwin':
+    import matplotlib
+    matplotlib.use("TkAgg")
+
 import pandas as pd
 import datetime as dt
 from src import StrategyLearner as sl
+from matplotlib import style
 from src import marketsimcode as msc
 import matplotlib.pyplot as plt
 import math
+style.use('ggplot')
 
 def plot_me(sl_port_vals, benchwarmer_port_vals):
     sl_port_vals_norm = sl_port_vals / sl_port_vals.iloc[0]
