@@ -28,7 +28,7 @@ def main():
     ed_train = dt.datetime(2017, 12, 31)
     sd_test = dt.datetime(2018, 1, 1)
     ed_test = dt.datetime(2018, 3, 31)
-    sym = 'A'
+    sym = 'V'
     capital = 100000
 
     # Time to train for the big match
@@ -44,7 +44,7 @@ def main():
     sl_port_vals = msc.compute_portvals(sl_trades, start_val=capital,
                                         commission=0.0, impact=0.0)
 
-    benchmark_stock = ['SPY']
+    benchmark_stock = 'SPY'
     # Benchmark of buying a 1000 and HODLing
     benchwarmer_trades = pd.DataFrame(0.0, index=sl_trades.index, columns=[benchmark_stock])
     benchwarmer_trades[benchmark_stock].iloc[0] = 1000.0
