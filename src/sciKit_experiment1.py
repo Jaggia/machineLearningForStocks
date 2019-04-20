@@ -41,6 +41,7 @@ def main():
                                    sd=sd_test,
                                    ed=ed_test,
                                    sv=capital)
+
     sl_port_vals = msc.compute_portvals(sl_trades, start_val=capital,
                                         commission=0.0, impact=0.0)
 
