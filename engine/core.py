@@ -103,5 +103,5 @@ if __name__ == '__main__':
     print(sim.portvals)
     f, ax = plt.subplots(1)
     #ax.plot(sim.portdates, sim.portvals)
-    ax.plot(sim.portvals)
+    ax.plot(sim.portdates, sim.portvals)
     plt.show()
