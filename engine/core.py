@@ -16,7 +16,7 @@ class Simulation(object):
                  ed_test=dt.datetime(2019, 3, 22),
                  currency=10000,
                  model=RFLearner(),
-                 tickers= ("GOOG",)):  # 'MSFT', 'AMZN', 'IBM', 'AAPL')):
+                 tickers= ("MSFT",)):  # 'MSFT', 'AMZN', 'IBM', 'AAPL')):
 
         self.sd_train = sd_train  # start day train
         # self.ed_train = sd_test - dt.timedelta(days=1)
@@ -32,6 +32,7 @@ class Simulation(object):
         self.portdates = []
         self.port = {}
         self.stocks = {}
+        self.correct = {True: 0, False: 0}
         for ticker in tickers:
             self.port[ticker] = 0
             self.stocks[ticker] = util.get_data([ticker], pd.date_range(sd_train, ed_test))
@@ -56,7 +57,6 @@ class Simulation(object):
             trades[ticker] = self.model.testAndBuildTradingDecisions(ticker, self.stocks[ticker],
                                                                      self.sd_train, self.cd,
                                                                      visualize=True)
-            # print('TRADES' + str(trades[ticker]))
 
         portval = 0
         for ticker, numTrades in trades.items():
@@ -67,6 +67,17 @@ class Simulation(object):
             stockVal = stockVals.values[0]
             if str(stockVal) == 'nan':
                 return 0
+
+            try:
+                # log how often model is correct
+                increase = self.stocks[ticker][self.cd:self.cd].values[0] > \
+                         self.stocks[ticker][self.cd+dt.timedelta(days=1):
+                                             self.cd+dt.timedelta(days=1)].values[0]
+                correct = (increase and trades[ticker][-1] > 0) or (not increase and trades[ticker][-1] <= 0)
+                self.correct[correct] += 1
+                print(self.correct)
+            except:
+                pass
 
             self.port[ticker] += numTrades
             self.currency -= numTrades * stockVal

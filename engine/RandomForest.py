@@ -30,20 +30,17 @@ class RFLearner(TradingModel):
         self.window = window
         self.learners[symbol] = RandomForestClassifier(n_estimators=100, max_depth=3)
 
-        prices = data[sd:ed]
-        # prices = prices.reshape((prices.shape[0],))
-        #print(prices)
-        print(type(prices))
-        #plt.plot(prices)
-        #plt.show()
-        #input()
-
         numdays = (ed - sd).days
         print('numdays', numdays)
         # window = 100
         if numdays < window:
             raise ValueError(util.ERR_COLOR + 'Need more days to train Random Forest '
                              'classifier with window ' + str(window))
+
+        syms = [symbol]
+        prices_all = util.get_data(syms, pd.date_range(sd, ed))
+        prices = prices_all[syms]
+        prices = janitor.backfill(prices)
 
         # Calculate indicators and features
         prices = janitor.backfill(prices)
@@ -69,10 +66,11 @@ class RFLearner(TradingModel):
         prices = prices_all[syms]
         prices = janitor.backfill(prices)
 
-        df_X = indicators.get_features(prices)
+        df_X, df_Y = get_X_and_Y(prices, -0.01, 0.01, 7)
         df_X = janitor.backfill(df_X)
         Xtest = df_X.values
 
+        # print(df_X)
         Y = self.learners[symbol].predict(Xtest)
 
         pos = 0.0
