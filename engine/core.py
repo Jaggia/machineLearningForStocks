@@ -1,25 +1,22 @@
-import src.util as util
+import engine.util as util
 import numpy as np
 import datetime as dt
 import matplotlib.pyplot as plt
 import pandas as pd
-from engine.RandomForest import RFLearner
 
-from colorama import Fore, Style
-LOG_COLOR = Style.BRIGHT + Fore.GREEN
-ERR_COLOR = Style.BRIGHT + Fore.RED
-print(LOG_COLOR + 'using this color for logs')
+from engine import janitor
+from engine.RandomForest import RFLearner
 
 
 class Simulation(object):
     def __init__(self,
-                 sd_train=dt.datetime(2014, 1, 1),
-                 ed_train=dt.datetime(2015, 12, 31),
-                 sd_test=dt.datetime(2016, 1, 1),
-                 ed_test=dt.datetime(2018, 1, 1),
-                 currency=100000,
+                 sd_train=dt.datetime(2018, 1, 1),
+                 ed_train=dt.datetime(2018, 12, 31),
+                 sd_test=dt.datetime(2019, 1, 1),
+                 ed_test=dt.datetime(2019, 3, 22),
+                 currency=1000000,
                  model=RFLearner(),
-                 tickers=('GOOG',)):  # 'MSFT', 'AMZN', 'IBM', 'AAPL')):
+                 tickers= "A"):  # 'MSFT', 'AMZN', 'IBM', 'AAPL')):
 
         self.sd_train = sd_train  # start day train
         # self.ed_train = sd_test - dt.timedelta(days=1)
@@ -41,7 +38,9 @@ class Simulation(object):
 
     def startSim(self):
         for symbol in self.tickers:
+            self.stocks[symbol] = janitor.backfill(self.stocks[symbol])
             self.model.addEvidence(symbol, self.stocks[symbol], self.sd_train, self.ed_train)
+
 
     def tradeToday(self, trade=True, retrain=False):
         if not trade:
@@ -54,20 +53,22 @@ class Simulation(object):
 
         trades = {}
         for ticker in self.tickers:
-            trades[ticker] = self.model.trade(ticker, self.stocks[ticker],
-                                              self.cd,
-                                              self.currency, self.port[ticker])
+            trades[ticker] = self.model.testAndBuildTradingDecisions(ticker, self.stocks[ticker],
+                                                                     self.sd_train, self.cd,
+                                                                     visualize=True)
+            # print('TRADES' + str(trades[ticker]))
 
         portval = 0
         for ticker, numTrades in trades.items():
+            numTrades = numTrades[-1]
             stockVal = self.stocks[ticker][self.cd:self.cd][ticker].values[0]
             if str(stockVal) == 'nan':
                 return 0
 
             self.port[ticker] += numTrades
             self.currency -= numTrades * stockVal
-            if self.port[ticker] < 0:
-                raise ValueError('Sold more stocks than you had')
+            # if self.port[ticker] < 0:
+            #     raise ValueError(util.ERR_COLOR + 'Sold more stocks than you had')
 
             print('{} val on {} is {}'.format(ticker, self.cd, stockVal))
 
@@ -90,17 +91,17 @@ if __name__ == '__main__':
     for i in range(365):
         sim.tradeToday(retrain=False)
         sim.nextDay()
-        print('Current Day:', sim.cd)
-        print('Portfolio:', sim.port)
-        print('Currency:', sim.currency)
-        try:
+        # print('Current Day:', sim.cd)
+        # print('Portfolio:', sim.port)
+        # print('Currency:', sim.currency)
+        # try:
             # fails if no portfolio yet (market closed at start of sim)
-            print('Value: ', sim.portvals[-1])
-        except:
-            pass
-        print()
+            # print('Value: ', sim.portvals[-1])
+        # except:
+        #     pass
+        # print()
 
-    print(sim.portvals)
+    # print(sim.portvals)
     f, ax = plt.subplots(1)
     #ax.plot(sim.portdates, sim.portvals)
     ax.plot(sim.portdates, sim.portvals)

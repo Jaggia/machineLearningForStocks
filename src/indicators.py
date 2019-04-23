@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import math
 import datetime as dt
-from code import util
+
 import matplotlib.pyplot as plt
 
 
@@ -52,25 +52,30 @@ def get_features(df_prices):
     upper_band, lower_band = bbands(df_prices, lookback=20)
     df_momentum = momentum(df_prices, lookback=2)
     df_midpoints = midpoints(df_prices, lookback=85)
-    df_so = so(df_prices)
+    # df_so = so(df_prices)
 
     df_last_prices = df_prices.shift(1)
 
+    # get percent changes per feature. How else to 'normalize'?
     price_upper = df_prices / upper_band
     price_lower = df_prices / lower_band
     price_midpoint = df_prices / df_midpoints
 
     plt.plot(price_midpoint)
 
-    lastprice_midpoint = df_last_prices / df_midpoints
+    # lastprice_midpoint = df_last_prices / df_midpoints (Did this in class 4 some reason i forget)
 
-    return pd.concat(
-        [price_upper,
+    features = pd.concat(
+        [
+         price_upper,
          price_lower,
          price_midpoint,
-         lastprice_midpoint,
-         df_momentum,
-         df_so], axis=1)
+         # lastprice_midpoint,
+         # df_so,
+         df_momentum
+         ], axis=1)
+
+    return features
 
 
 def get_Y(df_returns, YSELL, YBUY):
