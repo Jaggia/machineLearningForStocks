@@ -14,9 +14,9 @@ class Simulation(object):
                  ed_train=dt.datetime(2018, 12, 31),
                  sd_test=dt.datetime(2019, 1, 1),
                  ed_test=dt.datetime(2019, 3, 22),
-                 currency=1000000,
+                 currency=10000,
                  model=RFLearner(),
-                 tickers= "A"):  # 'MSFT', 'AMZN', 'IBM', 'AAPL')):
+                 tickers= ("GOOG",)):  # 'MSFT', 'AMZN', 'IBM', 'AAPL')):
 
         self.sd_train = sd_train  # start day train
         # self.ed_train = sd_test - dt.timedelta(days=1)
@@ -61,7 +61,10 @@ class Simulation(object):
         portval = 0
         for ticker, numTrades in trades.items():
             numTrades = numTrades[-1]
-            stockVal = self.stocks[ticker][self.cd:self.cd][ticker].values[0]
+            stockVals = self.stocks[ticker][self.cd:self.cd][ticker]
+            if len(stockVals) == 0:
+                return 0
+            stockVal = stockVals.values[0]
             if str(stockVal) == 'nan':
                 return 0
 
@@ -88,7 +91,7 @@ if __name__ == '__main__':
     sim.startSim()
     print(sim.cd)
 
-    for i in range(365):
+    for i in range(100):
         sim.tradeToday(retrain=False)
         sim.nextDay()
         # print('Current Day:', sim.cd)
