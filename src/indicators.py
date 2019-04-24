@@ -61,7 +61,7 @@ def get_features(df_prices):
     price_lower = df_prices / lower_band
     price_midpoint = df_prices / df_midpoints
 
-    plt.plot(price_midpoint)
+    # plt.plot(price_midpoint)
 
     # lastprice_midpoint = df_last_prices / df_midpoints (Did this in class 4 some reason i forget)
 

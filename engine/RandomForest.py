@@ -1,7 +1,5 @@
 import numpy as np
-import datetime as dt
 from sklearn.ensemble import RandomForestClassifier
-import matplotlib.pyplot as plt
 import pandas as pd
 
 from engine import janitor
