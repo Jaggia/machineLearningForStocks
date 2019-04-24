@@ -16,7 +16,7 @@ class Simulation(object):
                  ed_test=dt.datetime(2019, 3, 22),
                  currency=10000,
                  model=RFLearner(),
-                 tickers= ("MSFT",)):  # 'MSFT', 'AMZN', 'IBM', 'AAPL')):
+                 tickers= ("AIG", "ABT")):  # 'MSFT', 'AMZN', 'IBM', 'AAPL')):
 
         self.sd_train = sd_train  # start day train
         # self.ed_train = sd_test - dt.timedelta(days=1)
@@ -119,4 +119,8 @@ if __name__ == '__main__':
     f, ax = plt.subplots(1)
     #ax.plot(sim.portdates, sim.portvals)
     ax.plot(sim.portdates, sim.portvals)
+    plt.legend()
+    plt.xlabel('Time')
+    plt.ylabel('Portfolio Value')
+    plt.title('Portfolio Value over time')
     plt.show()
