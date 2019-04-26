@@ -70,12 +70,12 @@ class Simulation(object):
 
             try:
                 # log how often model is correct
-                increase = self.stocks[ticker][self.cd:self.cd].values[0] > \
+                increase = self.stocks[ticker][self.cd:self.cd].values[0] < \
                          self.stocks[ticker][self.cd+dt.timedelta(days=1):
                                              self.cd+dt.timedelta(days=1)].values[0]
                 correct = (increase and trades[ticker][-1] > 0) or (not increase and trades[ticker][-1] <= 0)
                 self.correct[correct] += 1
-                print(self.correct)
+                # print(self.correct)
             except:
                 pass
 
@@ -84,7 +84,7 @@ class Simulation(object):
             # if self.port[ticker] < 0:
             #     raise ValueError(util.ERR_COLOR + 'Sold more stocks than you had')
 
-            print('{} val on {} is {}'.format(ticker, self.cd, stockVal))
+            # print('{} val on {} is {}'.format(ticker, self.cd, stockVal))
 
             numStock = self.port[ticker]
             portval += numStock * stockVal
