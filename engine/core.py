@@ -1,9 +1,9 @@
-import engine.util as util
-import numpy as np
 import datetime as dt
+
 import matplotlib.pyplot as plt
 import pandas as pd
 
+import engine.util as util
 from engine import janitor
 from engine.RandomForest import RFLearner
 
@@ -16,7 +16,7 @@ class Simulation(object):
                  ed_test=dt.datetime(2019, 3, 22),
                  currency=10000,
                  model=RFLearner(),
-                 tickers= ("AIG", "ABT")):  # 'MSFT', 'AMZN', 'IBM', 'AAPL')):
+                 tickers= ("F")):  # 'MSFT', 'AMZN', 'IBM', 'AAPL')):
 
         self.sd_train = sd_train  # start day train
         # self.ed_train = sd_test - dt.timedelta(days=1)
@@ -59,8 +59,8 @@ class Simulation(object):
                                                                      visualize=True)
 
         portval = 0
-        for ticker, numTrades in trades.items():
-            numTrades = numTrades[-1]
+        for ticker, tradingDecisions in trades.items():
+            tradingDecision = tradingDecisions[-1]
             stockVals = self.stocks[ticker][self.cd:self.cd][ticker]
             if len(stockVals) == 0:
                 return 0
@@ -79,8 +79,8 @@ class Simulation(object):
             except:
                 pass
 
-            self.port[ticker] += numTrades
-            self.currency -= numTrades * stockVal
+            self.port[ticker] += tradingDecision
+            self.currency -= tradingDecision * stockVal
             # if self.port[ticker] < 0:
             #     raise ValueError(util.ERR_COLOR + 'Sold more stocks than you had')
 
@@ -105,21 +105,20 @@ if __name__ == '__main__':
     for i in range(100):
         sim.tradeToday(retrain=False)
         sim.nextDay()
-        # print('Current Day:', sim.cd)
-        # print('Portfolio:', sim.port)
-        # print('Currency:', sim.currency)
-        # try:
+        print('Current Day:', sim.cd)
+        print('Portfolio:', sim.port)
+        print('Currency:', sim.currency)
+        try:
             # fails if no portfolio yet (market closed at start of sim)
-            # print('Value: ', sim.portvals[-1])
-        # except:
-        #     pass
-        # print()
+            print('Value: ', sim.portvals[-1])
+        except:
+            pass
+        print()
 
-    # print(sim.portvals)
+    print("portvals", sim.portvals)
     f, ax = plt.subplots(1)
-    #ax.plot(sim.portdates, sim.portvals)
     ax.plot(sim.portdates, sim.portvals)
-    plt.legend()
+    # ax.legend("")
     plt.xlabel('Time')
     plt.ylabel('Portfolio Value')
     plt.title('Portfolio Value over time')

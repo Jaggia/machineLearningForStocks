@@ -16,7 +16,8 @@ def _get_crumbs_and_cookies(stock):
     returns a tuple of header, crumb and cookie
     """
 
-    url = 'https://finance.yahoo.com/quote/{}/history'.format(stock)
+    # url = 'https://finance.yahoo.com/quote/{}/history'.format(stock)
+    url = 'https://chartapi.finance.yahoo.com/instrument/1.0/{}/chartdata;type=quote;range=1d/csv'.format(stock)
     with requests.session():
         header = {'Connection': 'keep-alive',
                   'Expires': '-1',
