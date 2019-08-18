@@ -30,7 +30,8 @@ def getPrices(stocks, plot=False, write_to_csv=False):
         data, meta_data = ts.get_intraday(symbol=stock, interval='1min', outputsize='full')
         # data, meta_data = ts.get_daily(symbol='DIS', outputsize='full')
 
-        pprint(meta_data)
+        for key, val in meta_data.items():
+            print(key[3:] + ':' + str(val))
 
         if plot:
             data['4. close'].plot()
@@ -48,7 +49,8 @@ def getIndicators(stocks, plot=False, write_to_csv=False):
         ti = TechIndicators(key='UOVDY8C1SRAQHY5D', output_format='pandas')
         data, meta_data = ti.get_ema(symbol=stock, interval='60min', time_period=20)
 
-        pprint(meta_data)
+        for key, val in meta_data.items():
+            print(key[3:] + ': ' + str(val))
 
         if plot:
             data.plot()
