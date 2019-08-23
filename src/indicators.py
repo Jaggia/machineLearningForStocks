@@ -1,10 +1,14 @@
 ### Created by Anadi Jaggia
+import os
+
 import pandas as pd
 import numpy as np
 import math
 import datetime as dt
 
 import matplotlib.pyplot as plt
+
+from engine import util
 
 
 def bbands(df_prices, lookback):
@@ -89,3 +93,34 @@ def get_Y(df_returns, YSELL, YBUY):
 
     df_Y = df_returns.applymap(returns_classifier)
     return df_Y
+
+
+def get_features_from_csv(prices):
+    # read from csv
+    rootdir = "../indicators_data/"
+    for subdir, dirs, files in os.walk(rootdir):
+        for file in files:
+            print (os.path.join(subdir, file))
+
+    # get percent changes per feature. How else to 'normalize'?
+    # price_upper = df_prices / upper_band
+    # price_lower = df_prices / lower_band
+    # price_midpoint = df_prices / df_midpoints
+
+    # plt.plot(price_midpoint)
+
+    # lastprice_midpoint = df_last_prices / df_midpoints (Did this in class 4 some reason i forget)
+
+    # features = pd.concat(
+    #     [
+    #         price_upper,
+    #         price_lower,
+    #         price_midpoint,
+    #         # lastprice_midpoint,
+    #         # df_so,
+    #         df_momentum
+    #     ], axis=1)
+
+if __name__ == '__main__':
+     get_features_from_csv(util.get_data(['XLF'], pd.date_range(dt.datetime(2018, 1, 1), dt.datetime(2018, 12, 31))))
+

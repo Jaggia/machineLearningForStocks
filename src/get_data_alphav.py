@@ -64,8 +64,8 @@ def getIndicators(stocks, plot=False, write_to_csv=False):
 
 
 if __name__ == "__main__":
-    stocks = ['IBM', 'GOOG', 'AAPL', 'SPY', 'MJ']
-    # stocks = ['XLF']
+    # stocks = ['IBM', 'GOOG', 'AAPL', 'SPY', 'MJ']
+    stocks = ['DIS']
     cols = []
 
     # getPrices(stocks, plot=True, write_to_csv=False)

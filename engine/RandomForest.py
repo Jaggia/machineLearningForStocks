@@ -10,7 +10,7 @@ from src import indicators
 # ySell and yBuy are the min % changes we are looking for
 # that will trigger a buy/sell
 def get_X_and_Y(prices, YSELL, YBUY, window):
-    df_X = indicators.get_features(prices)
+    df_X = indicators.get_features_from_csv(prices)
     df_returns = (prices.shift(-window) / prices) - 1.0
     df_Y = indicators.get_Y(df_returns,
                             YSELL,
