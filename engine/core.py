@@ -16,7 +16,7 @@ class Simulation(object):
                  ed_test=dt.datetime(2019, 3, 22),
                  currency=10000,
                  model=RFLearner(),
-                 tickers= ("F")):  # 'MSFT', 'AMZN', 'IBM', 'AAPL')):
+                 tickers=["DIS"]):  # 'MSFT', 'AMZN', 'IBM', 'AAPL')):
 
         self.sd_train = sd_train  # start day train
         # self.ed_train = sd_test - dt.timedelta(days=1)

@@ -9,8 +9,8 @@ from src import indicators
 
 # ySell and yBuy are the min % changes we are looking for
 # that will trigger a buy/sell
-def get_X_and_Y(prices, YSELL, YBUY, window):
-    df_X = indicators.get_features_from_csv(prices)
+def get_X_and_Y(prices, YSELL, YBUY, window, symbols):
+    df_X = indicators.get_features_from_csv(prices, symbols)
     df_returns = (prices.shift(-window) / prices) - 1.0
     df_Y = indicators.get_Y(df_returns,
                             YSELL,
@@ -36,7 +36,7 @@ class RFLearner(TradingModel):
                              'classifier with window ' + str(window))
 
         # Calculate indicators and features
-        df_X, df_Y = get_X_and_Y(data, -0.01, 0.01, 7)
+        df_X, df_Y = get_X_and_Y(data, -0.01, 0.01, 7, [symbol])
 
         df_X = janitor.backfill(df_X)
         df_Y = janitor.backfill(df_Y)

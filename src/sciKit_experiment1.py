@@ -28,7 +28,7 @@ def main():
     ed_train = dt.datetime(2017, 12, 31)
     sd_test = dt.datetime(2018, 1, 1)
     ed_test = dt.datetime(2018, 3, 31)
-    sym = 'F'
+    sym = ['DIS']
     capital = 100000
 
     # Time to train for the big match

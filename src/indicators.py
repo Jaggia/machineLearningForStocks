@@ -109,6 +109,7 @@ def get_features_from_csv(prices, symbols):
                 df_features = pd.concat([df_features, df_temp], axis=1)
 
     print(df_features)
+    return df_features
 
 
 
