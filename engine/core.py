@@ -10,9 +10,9 @@ from engine.RandomForest import RFLearner
 
 class Simulation(object):
     def __init__(self,
-                 sd_train=dt.datetime(2018, 1, 1),
+                 sd_train=dt.datetime(2018, 12, 1),
                  ed_train=dt.datetime(2018, 12, 31),
-                 sd_test=dt.datetime(2019, 1, 1),
+                 sd_test=dt.datetime(2019, 3, 15),
                  ed_test=dt.datetime(2019, 3, 22),
                  currency=10000,
                  model=RFLearner(),

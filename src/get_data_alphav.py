@@ -60,7 +60,7 @@ def getIndicators(stocks, plot=False, write_to_csv=False):
 
         if write_to_csv:
             csv_data = pd.DataFrame(data)
-            csv_data.to_csv("../indicators_data/EMA/" + stock + ".csv", index=False)
+            csv_data.to_csv("../indicators_data/EMA/" + stock + ".csv", index=True)
 
 
 if __name__ == "__main__":
@@ -69,6 +69,6 @@ if __name__ == "__main__":
     cols = []
 
     # getPrices(stocks, plot=True, write_to_csv=False)
-    getIndicators(stocks, plot=True, write_to_csv=False)
+    getIndicators(stocks, plot=True, write_to_csv=True)
 
 

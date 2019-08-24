@@ -95,12 +95,23 @@ def get_Y(df_returns, YSELL, YBUY):
     return df_Y
 
 
-def get_features_from_csv(prices):
+def get_features_from_csv(prices, symbols):
+    # create data frame
+    df_features = pd.DataFrame()
+    print(df_features)
     # read from csv
     rootdir = "../indicators_data/"
     for subdir, dirs, files in os.walk(rootdir):
         for file in files:
-            print (os.path.join(subdir, file))
+            for symbol in symbols:
+                full_path = os.path.join(subdir, symbol + ".csv")
+                df_temp = pd.read_csv(full_path)
+                df_features = pd.concat([df_features, df_temp], axis=1)
+
+    print(df_features)
+
+
+
 
     # get percent changes per feature. How else to 'normalize'?
     # price_upper = df_prices / upper_band
@@ -122,5 +133,6 @@ def get_features_from_csv(prices):
     #     ], axis=1)
 
 if __name__ == '__main__':
-     get_features_from_csv(util.get_data(['XLF'], pd.date_range(dt.datetime(2018, 1, 1), dt.datetime(2018, 12, 31))))
+     symbols = ['DIS']
+     get_features_from_csv(util.get_data(symbols, pd.date_range(dt.datetime(2018, 1, 1), dt.datetime(2018, 12, 31))), symbols)
 

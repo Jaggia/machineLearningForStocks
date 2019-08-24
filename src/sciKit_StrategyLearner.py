@@ -7,8 +7,9 @@ import RTLearner
 import BagLearner
 
 
-def get_X_and_Y(prices, YSELL, YBUY, N, impact):
-    df_X = indicators.get_features(prices)
+def get_X_and_Y(prices, YSELL, YBUY, N, impact, symbols):
+    # df_X = indicators.get_features_from_csv(price)
+    df_X = indicators.get_features_from_csv(prices, symbols)
     df_returns = (prices.shift(-N) / prices) - 1.0
     df_Y = indicators.get_Y(df_returns,
                             YSELL - impact,
@@ -37,7 +38,7 @@ class StrategyLearner(object):
         prices = prices_all[syms]
 
         # Calculate indicators and features
-        df_X, df_Y = get_X_and_Y(prices, -0.01, 0.01, 7, self.impact)
+        df_X, df_Y = get_X_and_Y(prices, -0.01, 0.01, 7, self.impact, syms)
 
         Xtrain = df_X.values
         Ytrain = df_Y.values

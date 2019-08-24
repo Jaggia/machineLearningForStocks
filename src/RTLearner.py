@@ -6,9 +6,9 @@ from sklearn.ensemble import RandomForestClassifier
 
 class RTLearner(object):
 
-    def __init__(self, leaf_size = 1):
+    def __init__(self, leaf_size = 40):
         self.leaf_size = leaf_size
-        self.learner = RandomForestClassifier(n_estimators=100, max_depth=3)
+        self.learner = RandomForestClassifier(n_estimators=100, max_depth=1000)
 
 
     def addEvidence(self, Xtrain, Ytrain):

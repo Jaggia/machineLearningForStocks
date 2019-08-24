@@ -1,8 +1,8 @@
 ### Created by Anadi Jaggia
-from sys import platform as sys_pf
-if sys_pf == 'darwin':
-    import matplotlib
-    matplotlib.use("TkAgg")
+# from sys import platform as sys_pf
+# if sys_pf == 'darwin':
+#     import matplotlib
+#     matplotlib.use("TkAgg")
 
 import pandas as pd
 import datetime as dt
@@ -24,11 +24,11 @@ def plot_me(sl_port_vals, benchwarmer_port_vals):
 def main():
 
     # Parameters
-    sd_train = dt.datetime(2014, 1, 1)
+    sd_train = dt.datetime(2017, 1, 1)
     ed_train = dt.datetime(2017, 12, 31)
     sd_test = dt.datetime(2018, 1, 1)
     ed_test = dt.datetime(2018, 3, 31)
-    sym = 'V'
+    sym = 'F'
     capital = 100000
 
     # Time to train for the big match
