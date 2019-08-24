@@ -44,9 +44,10 @@ def getPrices(stocks, plot=False, write_to_csv=False):
             csv_data.to_csv("../prices_data/" + stock + "/full.csv", index=False)
 
 
-def getIndicators(stocks, plot=False, write_to_csv=False):
+def getIndicators_EMA(stocks, plot=False, write_to_csv=False):
     for stock in stocks:
         ti = TechIndicators(key='UOVDY8C1SRAQHY5D', output_format='pandas')
+        # data, meta_data = ti.get_ema(symbol=stock, interval='60min', time_period=20)
         data, meta_data = ti.get_ema(symbol=stock, interval='60min', time_period=20)
 
         for key, val in meta_data.items():
@@ -62,6 +63,25 @@ def getIndicators(stocks, plot=False, write_to_csv=False):
             csv_data = pd.DataFrame(data)
             csv_data.to_csv("../indicators_data/EMA/" + stock + ".csv", index=True)
 
+def getIndicators_RSI(stocks, plot=False, write_to_csv=False):
+    for stock in stocks:
+        ti = TechIndicators(key='UOVDY8C1SRAQHY5D', output_format='pandas')
+        # data, meta_data = ti.get_ema(symbol=stock, interval='60min', time_period=20)
+        data, meta_data = ti.get_rsi(symbol=stock, interval='60min', time_period=20)
+
+        for key, val in meta_data.items():
+            print(key[3:] + ': ' + str(val))
+
+        if plot:
+            data.plot()
+            plt.title('RSI Indicator for the ' + stock + ' stock (60 min)')
+            plt.xticks(rotation=15)  # Help prevent axis labels from overlapping
+            plt.show()
+
+        if write_to_csv:
+            csv_data = pd.DataFrame(data)
+            csv_data.to_csv("../indicators_data/RSI/" + stock + ".csv", index=True)
+
 
 if __name__ == "__main__":
     # stocks = ['IBM', 'GOOG', 'AAPL', 'SPY', 'MJ']
@@ -69,6 +89,7 @@ if __name__ == "__main__":
     cols = []
 
     # getPrices(stocks, plot=True, write_to_csv=False)
-    getIndicators(stocks, plot=True, write_to_csv=True)
+    # getIndicators_EMA(stocks, plot=True, write_to_csv=True)
+    # getIndicators_RSI(stocks, plot=True, write_to_csv=True)
 
 
